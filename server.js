@@ -5,7 +5,8 @@ const { db, User, Task } = require('./database/setup');
 require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
+//const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -43,6 +44,9 @@ function requireAuth(req, res, next) {
     }
 }
 
+const cors = require('cors');
+app.use(cors());
+
 // Test database connection
 async function testConnection() {
     try {
@@ -64,6 +68,17 @@ app.get('/health', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
+
+// Register check endpoint
+app.get('/register', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        message: 'Task API is running',
+        environment: process.env.NODE_ENV,
+        timestamp: new Date().toISOString()
+    });
+});
+
 
 // Root endpoint
 app.get('/', (req, res) => {
